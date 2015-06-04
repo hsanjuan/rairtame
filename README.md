@@ -4,8 +4,6 @@ Rairtame is a Command-Line Interface and Ruby wrapper around the `airtame-stream
 
 It allows to easily control the `airtame-streamer` daemon, which is in charge of capturing and streaming video to an (http://airtame.com)[AIRTAME dongle].
 
-It does not require compiling stuff and it installs and uninstalls cleanly.
-
 **Make sure the `airtame-streamer` is running when using `rairtame`**
 
 ## Installation
@@ -21,6 +19,8 @@ The Rairtame Command-Line interface is accessed through the
     $ rairtame command [arguments]
 
 command.
+
+Remember to run `rairtame init` to init the streamer before connecting anywhere.
 
 You can see all the options running `rairtame -h`.
 
