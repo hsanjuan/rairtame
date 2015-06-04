@@ -57,7 +57,6 @@ module Rairtame
         raise $!
       rescue StandardError
         msg = "Cannot connect to streamer: is it running?: #{$!.message}"
-        puts $!.backtrace
         raise ClientException.new(msg)
       rescue Exception
         msg = "An error occurred while talking to the streamer: #{$!.message}"

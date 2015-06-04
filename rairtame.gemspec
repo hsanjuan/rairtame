@@ -44,5 +44,5 @@ EOF
   spec.add_dependency "gli", "~> 2.13"
   spec.add_dependency "uuidtools", "~> 2.1"
   spec.add_dependency "colorize", "~> 0.7"
-  spec.add_dependency "jsonrpctcp", "~> 1.0"
+  spec.add_dependency "jsonrpctcp", '~> 1.0', '>= 1.0.1'
 end
