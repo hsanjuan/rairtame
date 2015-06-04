@@ -1,10 +1,10 @@
 # Rairtame
 
-Rairtame is a Command-Line Interface and Ruby wrapper around the `airtame-streamer` JSON-RPC API.
+Rairtame is a library and CLI utility to interact with the `airtame-streamer` JSON-RPC API.
 
-It allows to easily control the `airtame-streamer` daemon, which is in charge of capturing and streaming video to an (http://airtame.com)[AIRTAME dongle].
+It allows to easily control the `airtame-streamer` daemon, which is in charge of capturing and streaming video to an [AIRTAME dongle](http://airtame.com).
 
-**Make sure the `airtame-streamer` is running when using `rairtame`**
+**Make sure the `airtame-streamer` is running when using `rairtame`**.
 
 ## Installation
 
@@ -43,7 +43,7 @@ client.close_streamer()
 
 Rairtame does not yet implement the SSDP protocol (which allows autodiscovery of the streamer) nor performs any registration with the `airtame-streamer` (for example to receive notifications).
 
-Particularly, I don't see many uses for these features at this point, and the official (https://github.com/airtame/airtame-cli)[Airtame CLI] supports them.
+Particularly, I don't see many uses for these features at this point, and the official [Airtame CLI](https://github.com/airtame/airtame-cli) supports them.
 
 ## Contributing
 
