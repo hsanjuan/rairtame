@@ -1,0 +1,160 @@
+#!/usr/bin/env ruby
+
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'gli'
+require 'rairtame'
+require 'colorize'
+
+module Rairtame
+  module RairtameCLI
+    SUBCOMMANDS = {
+      :init => {
+        :short => 'Init the streamer',
+        :long => 'Initializes the streamer',
+        :arg => nil,
+        :method => :init_streamer
+      },
+      :close => {
+        :short => 'Close the streamer',
+        :long => 'Closes the streamer',
+        :arg => nil,
+        :method => :close_streamer
+      },
+      :connect => {
+        :short => 'Connect to Airtame dongle',
+        :long => 'Connects and starts streaming to the Airtame dongle',
+        :arg => 'hostname/ip',
+        :method => :connect
+      },
+      :disconnect => {
+        :short => 'Disconnect from the Airtame dongle',
+        :long => 'Disconnects and stops streaming to the Airtame dongle',
+        :arg => 'hostname/ip',
+        :method => :disconnect
+      },
+      :mode => {
+        :short => 'Set streaming mode',
+        :long => 'Sets streaming mode to one of the options',
+        :arg => 'manual|video|work|present',
+        :allowed => ['manual', 'video', 'work', 'present'],
+        :method => :mode=
+      },
+      :quality => {
+        :short => 'Set streaming quality [1-5]',
+        :long => 'Sets the streaming quality from 0-worst to 5-best,
+ when using manual mode',
+        :arg => 'quality',
+        :allowed => (0..5).map(&:to_s),
+        :method => :quality=
+      },
+      :fps => {
+        :short => 'Set streaming fps [1-60]',
+        :long => 'Sets the fps [1-60] for streaming, when using manual mode',
+        :arg => 'fps',
+        :allowed => (1..60).map(&:to_s),
+        :method => :framerate=
+      },
+      :audio => {
+        :short => 'Enable or disable audio',
+        :long => 'Enables or disables audio streaming to the Airtame dongle',
+        :arg => 'on/off',
+        :allowed => ['on', 'off'],
+        :method => :audio=
+      },
+      :video => {
+        :short => 'Enable or disable video',
+        :long => 'Enables or disables video streaming to the Airtame dongle',
+        :arg => 'on/off',
+        :allowed => ['on', 'off'],
+        :method => :video=
+      },
+      :buffer => {
+        :short => 'Set streaming buffer length in ms',
+        :long => 'Sets the length of the streaming buffer in ms',
+        :arg => 'ms',
+        :method => :buffer=
+      },
+      :fluent => {
+        :short => 'Enable or disable fluent video',
+        :long => 'Enables or disables the fluent video streaming feature',
+        :arg => 'on/off',
+        :allowed => ['on', 'off'],
+        :method => :video_jitterbuffer=      
+      },
+      :state => {
+        :short => 'Show streamer\'s state',
+        :long => 'Prints streamer\'s state in a pretty way',
+        :arg => nil,
+        :method => :pretty_state
+      }
+    }
+
+    class << self
+      include GLI::App
+
+      def setup
+        program_desc <<EOF
+A Ruby interface to the airtame-streamer JSON-RPC API, which allows
+to stream to an AIRTAME dongle. 
+EOF
+
+        switch [:v, :verbose]
+        switch [:c, :color], :default_value => true
+        flag [:streamer_host], :default_value => 'localhost'
+        flag [:config_file]
+        
+        pre do |global_options, command, options, args|
+          @client = Rairtame::Client.new(global_options)
+          String.disable_colorization = !global_options[:color]
+          true
+        end
+
+        SUBCOMMANDS.each do |cmd_name, cmd|
+          block = Proc.new do |c|
+            c.action do |global_options, options, args|
+              argument = args.first
+              client_method = cmd[:method]
+              if cmd[:arg] && argument.nil?
+                help_now!("Provide an argument for the command")
+              end
+              if cmd[:allowed] &&
+                  !cmd[:allowed].include?(argument)
+                help_now!("Invalid argument: #{argument}")
+              end
+
+              begin
+
+                if argument
+                  puts "> Setting #{cmd_name}:#{argument}".
+                    colorize(:light_yellow).bold()
+                  result = @client.send(client_method, argument)
+                else
+                  puts "> Getting #{client_method}".
+                    colorize(:light_yellow).bold()
+                  result = @client.send(client_method)
+                end
+                puts "< OK".colorize(:light_green).bold()
+              rescue ClientException
+                puts "< ERROR: #{$!.message}".
+                  colorize(:light_red).bold
+              rescue JsonRpcClientException
+                puts "< ERROR from streamer: #{$!.message}".
+                  colorize(:light_red).bold
+              end
+
+            end
+          end
+
+          desc(cmd[:short])
+          long_desc(cmd[:long])
+          arg_name("<#{cmd[:arg]}>") if cmd[:arg]
+          command(cmd_name, &block)
+        end
+      end
+    end
+  end
+end
+
+Rairtame::RairtameCLI::setup()
+Rairtame::RairtameCLI::run(ARGV)
