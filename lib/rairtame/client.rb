@@ -15,11 +15,11 @@
 # along with Rairtame.  If not, see <http://www.gnu.org/licenses/>
 
 require 'ipaddr'
+require 'jsonrpctcp'
 require 'socket'
 require 'pp'
 
 require 'rairtame/config'
-require 'rairtame/json_rpc_client'
 
 module Rairtame
 
@@ -40,7 +40,8 @@ module Rairtame
       @verbose = opts[:verbose]
       @streamer_host = opts[:streamer_host] || 'localhost'
       @streamer_uri = "http://#{@streamer_host}:#{STREAMER_CMDS_PORT}/"
-      @json_rpc_client = JsonRpcClient.new(@streamer_host, STREAMER_CMDS_PORT)
+      @json_rpc_client = Jsonrpctcp::Client.new(@streamer_host,
+                                                STREAMER_CMDS_PORT)
     end
 
     def rpc_call(method, *params)
@@ -49,8 +50,10 @@ module Rairtame
         r = @json_rpc_client[method.to_s, *params]
         log_response(r)
         return r
-      rescue JsonRpcClientException
-        log_response($!.hash)
+      rescue Jsonrpctcp::RPCException
+        raise $!
+      rescue Jsonrpctcp::RPCError
+        log_response($!.source_object)
         raise $!
       rescue StandardError
         msg = "Cannot connect to streamer: is it running?: #{$!.message}"

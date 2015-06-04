@@ -32,7 +32,7 @@ Rairtame is a Command-Line Interface and Ruby wrapper around the 'airtame-stream
 It allows to easily control the `airtame-streamer` daemon, which is in charge of capturing and streaming video to an AIRTAME dongle.
 EOF
   spec.homepage      = "https://github.com/hsanjuan/rairtame"
-  spec.license       = "GPLv3"
+  spec.license       = "GPLv3+"
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
@@ -44,4 +44,5 @@ EOF
   spec.add_dependency "gli", "~> 2.13"
   spec.add_dependency "uuidtools", "~> 2.1"
   spec.add_dependency "colorize", "~> 0.7"
+  spec.add_dependency "jsonrpctcp", "~> 0.2"
 end

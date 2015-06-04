@@ -155,7 +155,7 @@ EOF
               rescue ClientException
                 puts "< ERROR: #{$!.message}".
                   colorize(:light_red).bold
-              rescue JsonRpcClientException
+              rescue Jsonrpctcp::RPCException, Jsonrpctcp::RPCError
                 puts "< ERROR from streamer: #{$!.message}".
                   colorize(:light_red).bold
               end
