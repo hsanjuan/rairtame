@@ -1,5 +1,7 @@
 # Rairtame
 
+[![Gem Version](https://badge.fury.io/rb/rairtame.svg)](http://badge.fury.io/rb/rairtame)
+
 Rairtame is a library and CLI utility to interact with the `airtame-streamer` JSON-RPC API.
 
 It allows to easily control the `airtame-streamer` daemon, which is in charge of capturing and streaming video to an [AIRTAME dongle](http://airtame.com).
