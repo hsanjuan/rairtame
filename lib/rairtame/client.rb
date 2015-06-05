@@ -160,7 +160,7 @@ module Rairtame
     def log_response(r)
       # log anyway
       return unless @verbose
-      is_error = JsonRpcClient.is_error?(r)
+      is_error = Jsonrpctcp::Client.is_error?(r)
       if is_error then warn "Received error:"
       else puts "Received response:" end
       pp r
