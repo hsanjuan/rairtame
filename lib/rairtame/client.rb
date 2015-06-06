@@ -82,13 +82,52 @@ module Rairtame
       rpc_call(:closeStreamer)
     end
 
-    def state
+    def status
       rpc_call(:getState)
     end
+    alias :state :status
 
-    def pretty_state
-      rpc_call(:getState)
+    def pretty_status
+      puts
+      puts "AIRTAME status:"
+      puts "---------------"
+      state = rpc_call(:getState)['result']
+      if state['state'] == 'not initialized'
+        puts "Not initialized"
+      elsif state['current_mode']
+        mode_str = case state['current_mode']
+                   when 0 then "video"
+                   when 1 then "work"
+                   when 2 then "present"
+                   when 3 then "manual"
+                   else "unknown"
+                   end
+        fluent = state['remote_settings']['video_jb_flags'] == '1' ? "yes" : "no"
+        reliable = state['reliable_transport'] == '1' ? "yes" : "no"
+        puts "Mode: #{mode_str}"
+        puts "FPS: #{state['video_fps']}"
+        puts "Reliability: #{reliable}"
+        puts "Fluent playback: #{fluent}"
+        puts "Clients:"
+        puts "  -- No clients connected" if state['clients'].empty?
+        state['clients'].each do |client|
+          c = client['channel']
+          str = "#{c['IP']}: "
+          str << "Sent #{(c['bytes_sent'] / 1024.0 / 1024.0).round(2)} MB. "
+          str << "Recv: #{(c['bytes_received'] / 1024.0).round(2)} KB. "
+          str << "Packet loss: #{c['packet_loss'].to_f.round(2)}. "
+          str << "Avg latency: #{c['avg_latency']}"
+          puts "  -- #{str}"
+        end
+        state
+      else
+        puts "Unkown response"
+      end
+      puts
+      puts "(run with -v to see the raw response)"
+      state
     end
+    alias :pretty_state :pretty_status
 
     def framerate=(v)
       rpc_call(:setStreamerSettings, 'framerate', v.to_s)

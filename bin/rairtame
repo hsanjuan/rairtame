@@ -106,11 +106,11 @@ module Rairtame
         :allowed => ['on', 'off'],
         :method => :reliable_transport=
       },
-      :state => {
-        :short => 'Show streamer\'s state',
-        :long => 'Prints streamer\'s state in a pretty way',
+      :status => {
+        :short => 'Show streamer\'s status',
+        :long => 'Prints streamer\'s status in a pretty way',
         :arg => nil,
-        :method => :pretty_state
+        :method => :pretty_status
       }
     }
 
