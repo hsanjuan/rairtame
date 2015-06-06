@@ -20,7 +20,25 @@ The Rairtame Command-Line interface is accessed through the
 
     $ rairtame command [arguments]
 
-command.
+command. Supported commands:
+
+```
+COMMANDS
+    audio      - Enable or disable audio
+    buffer     - Set streaming buffer length in ms
+    close      - Close the streamer
+    connect    - Connect to Airtame dongle
+    disconnect - Disconnect from the Airtame dongle
+    fluent     - Enable or disable fluent video playback
+    fps        - Set streaming fps [1-60]
+    help       - Shows a list of commands or help for one command
+    init       - Init the streamer
+    mode       - Set streaming mode
+    quality    - Set streaming quality [1-5]
+    reliable   - Enable or disable reliability
+    status     - Show streamer's status
+    video      - Enable or disable video
+```
 
 Remember to run `rairtame init` to init the streamer before connecting anywhere.
 
