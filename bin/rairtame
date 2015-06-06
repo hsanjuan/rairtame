@@ -93,11 +93,18 @@ module Rairtame
         :method => :buffer=
       },
       :fluent => {
-        :short => 'Enable or disable fluent video',
-        :long => 'Enables or disables the fluent video streaming feature',
+        :short => 'Enable or disable fluent video playback',
+        :long => 'Enables or disables the fluent video playback (jitterbuffer)',
         :arg => 'on/off',
         :allowed => ['on', 'off'],
-        :method => :video_jitterbuffer=      
+        :method => :video_jitterbuffer=
+      },
+      :reliable => {
+        :short => 'Enable or disable reliability',
+        :long => 'Enables or disables the reliable transport option',
+        :arg => 'on/off',
+        :allowed => ['on', 'off'],
+        :method => :reliable_transport=
       },
       :state => {
         :short => 'Show streamer\'s state',
@@ -113,14 +120,14 @@ module Rairtame
       def setup
         program_desc <<EOF
 A Ruby interface to the airtame-streamer JSON-RPC API, which allows
-to stream to an AIRTAME dongle. 
+to stream to an AIRTAME dongle.
 EOF
 
         switch [:v, :verbose]
         switch [:c, :color], :default_value => true
         flag [:streamer_host], :default_value => 'localhost'
         flag [:config_file]
-        
+
         pre do |global_options, command, options, args|
           @client = Rairtame::Client.new(global_options)
           String.disable_colorization = !global_options[:color]

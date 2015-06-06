@@ -118,20 +118,12 @@ module Rairtame
 
     def video=(v)
       # TODO: Read av flags first and keep the audio
-      value = case v
-              when "on" then "1"
-              when "off" then "0"
-              end
-      rpc_call(:setStreamerSettings, 'av_flags', value)
+      rpc_call(:setStreamerSettings, 'av_flags', on_off_to_1_0(v))
     end
 
     # fluent video
     def video_jitterbuffer=(v)
-      value = case v
-              when "on" then "1"
-              when "off" then "0"
-              end
-      rpc_call(:setStreamerSettings, 'video_jb_flags', value)
+      rpc_call(:setStreamerSettings, 'video_jb_flags', on_off_to_1_0(v))
     end
 
     # unused
@@ -146,11 +138,27 @@ module Rairtame
     end
 
     def reliable_transport=(v)
-      warn "Not implemented"
-      nil
+      rpc_call(:setStreamerSettings, 'reliable_transport',
+               on_off_to_true_false(v))
     end
 
     private
+
+    def on_off_to_1_0(value)
+      case value
+      when "off" then "0"
+      when "on" then "1"
+      else value
+      end
+    end
+
+    def on_off_to_true_false(value)
+      case value
+      when "off" then "false"
+      when "on" then "true"
+      else value
+      end
+    end
 
     def log_command(method, params)
       return unless @verbose
