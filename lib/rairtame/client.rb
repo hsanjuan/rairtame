@@ -102,8 +102,8 @@ module Rairtame
                    when 3 then "manual"
                    else "unknown"
                    end
-        fluent = state['remote_settings']['video_jb_flags'] == '1' ? "yes" : "no"
-        reliable = state['reliable_transport'] == '1' ? "yes" : "no"
+        fluent = state['remote_settings']['video_jb_flags'].to_i == 1 ? "yes" : "no"
+        reliable = state['reliable_transport'].to_i == 1 ? "yes" : "no"
         buffer = state['remote_settings']['buffer_period']
         puts "Mode: #{mode_str}"
         puts "FPS: #{state['video_fps']}"
