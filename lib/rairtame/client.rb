@@ -104,10 +104,12 @@ module Rairtame
                    end
         fluent = state['remote_settings']['video_jb_flags'] == '1' ? "yes" : "no"
         reliable = state['reliable_transport'] == '1' ? "yes" : "no"
+        buffer = state['remote_settings']['buffer_period']
         puts "Mode: #{mode_str}"
         puts "FPS: #{state['video_fps']}"
         puts "Reliability: #{reliable}"
         puts "Fluent playback: #{fluent}"
+        puts "Buffer: #{buffer}ms"
         puts "Clients:"
         puts "  -- No clients connected" if state['clients'].empty?
         state['clients'].each do |client|
@@ -179,6 +181,11 @@ module Rairtame
     def reliable_transport=(v)
       rpc_call(:setStreamerSettings, 'reliable_transport',
                on_off_to_true_false(v))
+    end
+
+    def resolution=(v)
+      rpc_call(:setStreamerSettings, 'encode_resolution',
+               v)
     end
 
     private

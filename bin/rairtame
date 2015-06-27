@@ -65,6 +65,12 @@ module Rairtame
         :allowed => (0..5).map(&:to_s),
         :method => :quality=
       },
+      :resolution => {
+        :short => 'Set streaming resolution',
+        :long => 'Sets the resolution of the screen capture for streaming',
+        :arg => 'resolution',
+        :method => :resolution=
+      },
       :fps => {
         :short => 'Set streaming fps [1-60]',
         :long => 'Sets the fps [1-60] for streaming, when using manual mode',

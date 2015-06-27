@@ -36,6 +36,7 @@ COMMANDS
     mode       - Set streaming mode
     quality    - Set streaming quality [1-5]
     reliable   - Enable or disable reliability
+    resolution - Set streaming resolution
     status     - Show streamer's status
     video      - Enable or disable video
 ```
@@ -52,7 +53,7 @@ You can also easily integrate your own code against this library. For example:
 require 'rairtame'
 client = Rairtame::Client.new()
 client.init_streamer()
-client.connect("myairtame")
+client.connect("myairtame") # hostname or ip
 client.quality = 5
 client.buffer = 5000
 client.disconnect()
