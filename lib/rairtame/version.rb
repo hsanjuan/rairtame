@@ -15,5 +15,5 @@
 # along with Rairtame.  If not, see <http://www.gnu.org/licenses/>
 
 module Rairtame
-  VERSION = "1.1.0"
+  VERSION = "1.1.1"
 end
